@@ -1,9 +1,9 @@
 import { Hono } from 'hono';
 import { logger } from 'hono/logger';
 import { cors } from 'hono/cors';
-import { healthRoute } from './routes/health';
-import { proxyRoutes } from './routes/proxy';
-import { authMiddleware } from './middleware/auth';
+import { healthRoute } from './routes/health.ts';
+import { proxyRoutes } from './routes/proxy.ts';
+import { authMiddleware } from './middleware/auth.ts';
 
 const app = new Hono();
 

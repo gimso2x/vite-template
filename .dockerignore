@@ -1,0 +1,17 @@
+node_modules
+package-lock.json
+dist
+.git
+.gitignore
+.env*
+.DS_Store
+.idea
+.vscode
+build
+target
+out
+.next
+.cursor
+.agent
+*.log
+*.md

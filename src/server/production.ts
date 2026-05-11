@@ -2,8 +2,8 @@ import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import app from './app';
-import { ogInjector } from './middleware/og-injector';
+import app from './app.ts';
+import { ogInjector } from './middleware/og-injector.ts';
 
 const distPath = resolve(import.meta.dirname ?? '.', '../../dist');
 const indexHtml = readFileSync(resolve(distPath, 'index.html'), 'utf-8');

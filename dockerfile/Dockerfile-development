@@ -1,0 +1,57 @@
+# syntax=docker/dockerfile:1
+
+# ── Base ──────────────────────────────────────────────────────────────
+ARG NODE_VERSION=24.13.0-slim
+FROM node:${NODE_VERSION} AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@10.30.3 --activate
+
+# ── 의존성 설치 ───────────────────────────────────────────────────────
+FROM base AS deps
+WORKDIR /app
+COPY package.json pnpm-lock.yaml .npmrc* ./
+# id=pnpm: 여러 스테이지가 동일한 캐시를 공유 (공식 가이드 권장)
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install --frozen-lockfile --ignore-scripts
+
+# ── 프로덕션 의존성 설치 ────────────────────────────────────────────────
+FROM base AS prod-deps
+WORKDIR /app
+COPY package.json pnpm-lock.yaml .npmrc* ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install --prod --frozen-lockfile --ignore-scripts
+
+# ── 빌드 ─────────────────────────────────────────────────────────────
+FROM base AS builder
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# 필요 시 빌드 타임 환경변수 주입
+# ARG VITE_API_URL
+# ENV VITE_API_URL=${VITE_API_URL}
+
+RUN pnpm run build
+
+# ── 런타임 ────────────────────────────────────────────────────────────
+FROM node:${NODE_VERSION} AS runner
+WORKDIR /app
+
+ENV NODE_ENV=development
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+ENV TZ=Asia/Seoul
+
+# 빌드 결과물 복사
+COPY --from=builder --chown=node:node /app/package.json ./
+COPY --from=prod-deps --chown=node:node /app/node_modules ./node_modules
+COPY --from=builder --chown=node:node /app/dist ./dist
+COPY --from=builder --chown=node:node /app/src/server ./src/server
+
+USER node
+
+EXPOSE 3000
+
+CMD ["node", "--experimental-strip-types", "src/server/production.ts"]
