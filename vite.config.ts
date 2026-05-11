@@ -4,6 +4,7 @@ import react, { reactCompilerPreset } from '@vitejs/plugin-react';
 import babel from '@rolldown/plugin-babel';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import { devtools } from '@tanstack/devtools-vite';
+import { honoDevMiddleware } from './src/server/vite-plugin';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -13,6 +14,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    honoDevMiddleware(),
     devtools(),
     tanstackRouter({
       target: 'react',

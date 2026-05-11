@@ -9,6 +9,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
+    "start": "node --experimental-strip-types src/server/production.ts",
     "prepare": "simple-git-hooks",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -16,8 +17,10 @@
     "test:run": "vitest run"
   },
   "dependencies": {
+    "@hono/node-server": "^2.0.2",
     "@tanstack/react-query": "^5.100.9",
     "@tanstack/react-router": "^1.169.2",
+    "hono": "^4.12.18",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "zod": "^4.4.3"
