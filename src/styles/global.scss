@@ -2,33 +2,19 @@
 @use 'reset';
 @use 'buttons';
 
-// ============================================
-// Global Styles
-// ============================================
+// Ground Design System CSS (includes :root tokens + reset + component styles)
+@import '@proptier/ground/style.css';
 
+// --- Semantic color aliases (Ground tokens → app semantic names) ---
 :root {
-  // Light theme (default)
-  --color-bg: #{$light-bg};
-  --color-text: #{$light-text};
-  --color-text-heading: #{$light-text-heading};
-  --color-border: #{$light-border};
-  --color-surface: #{$light-surface};
-  --color-code-bg: #{$light-code-bg};
-  --color-primary: #{$color-primary};
-  --color-primary-light: #{$color-primary-light};
-
-  color-scheme: light dark;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #{$dark-bg};
-    --color-text: #{$dark-text};
-    --color-text-heading: #{$dark-text-heading};
-    --color-border: #{$dark-border};
-    --color-surface: #{$dark-surface};
-    --color-code-bg: #{$dark-code-bg};
-  }
+  --color-bg: var(--color-gray-0);
+  --color-text: var(--color-gray-700);
+  --color-text-heading: var(--color-gray-900);
+  --color-border: var(--color-gray-200);
+  --color-surface: var(--color-gray-50);
+  --color-code-bg: var(--color-gray-100);
+  --color-primary: var(--color-primary-500);
+  --color-primary-light: var(--color-primary-400);
 }
 
 body {
@@ -37,6 +23,8 @@ body {
   line-height: $line-height-normal;
   color: var(--color-text);
   background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 code,

@@ -1,10 +1,6 @@
 @use 'variables' as *;
 
-// ============================================
-// Mixins
-// ============================================
-
-// --- Responsive breakpoints ---
+// --- Responsive breakpoints (Ground: 480/768/1024/1280) ---
 @mixin respond-to($breakpoint) {
   @if $breakpoint == sm {
     @media (min-width: $breakpoint-sm) {
@@ -60,14 +56,9 @@
 
 // --- Visual effects ---
 @mixin glass-effect($opacity: 0.8) {
-  background: rgba($color-white, $opacity);
+  background: rgba(255, 255, 255, $opacity);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba($color-white, 0.2);
-
-  @media (prefers-color-scheme: dark) {
-    background: rgba($dark-bg, $opacity);
-    border-color: rgba($color-white, 0.08);
-  }
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 @mixin hover-lift {
