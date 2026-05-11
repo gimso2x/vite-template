@@ -1,0 +1,41 @@
+#!/bin/sh
+
+MSG_FILE="$1"
+
+# Made-with: Cursor 푸터 제거
+if [ -n "$MSG_FILE" ] && [ -f "$MSG_FILE" ]; then
+  TMP_STRIP="${MSG_FILE}.strip.$$"
+  if sed '/^Made-with: Cursor$/d; /^Co-Authored-By:/d' "$MSG_FILE" > "$TMP_STRIP" 2>/dev/null; then
+    mv "$TMP_STRIP" "$MSG_FILE" || {
+      rm -f "$TMP_STRIP"
+      exit 1
+    }
+  else
+    rm -f "$TMP_STRIP"
+  fi
+fi
+
+CURRENT_BRANCH="$(git branch --show-current 2>/dev/null)"
+IFS= read -r COMMIT_MSG < "$MSG_FILE"
+
+if [ -z "$CURRENT_BRANCH" ]; then
+  exit 0
+fi
+
+# Merge 커밋은 브랜치 프리픽스 검사를 건너뜀
+if [ -f ".git/MERGE_MSG" ]; then
+  exit 0
+fi
+
+EXPECTED_PREFIX="[$CURRENT_BRANCH] "
+
+case "$COMMIT_MSG" in
+  "$EXPECTED_PREFIX"*)
+    exit 0
+    ;;
+  *)
+    echo "❌ 커밋 메시지는 현재 브랜치명으로 시작해야 합니다."
+    echo "예시: [$CURRENT_BRANCH] 작업 요약"
+    exit 1
+    ;;
+esac
