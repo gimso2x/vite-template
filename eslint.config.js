@@ -5,6 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import unusedImports from 'eslint-plugin-unused-imports';
+import react from 'eslint-plugin-react';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
@@ -13,6 +14,7 @@ export default defineConfig([
     files: ['**/*.{ts,tsx}'],
     extends: [js.configs.recommended, tseslint.configs.recommended, reactHooks.configs.flat.recommended],
     plugins: {
+      react,
       'react-refresh': reactRefresh,
       'unused-imports': unusedImports,
     },
@@ -39,6 +41,8 @@ export default defineConfig([
       'prefer-const': 'error',
       'no-debugger': 'error',
       'no-console': 'warn',
+      'react/no-danger': 'warn',
+      'react/no-array-index-key': 'warn',
     },
   },
   eslintConfigPrettier,

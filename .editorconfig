@@ -7,3 +7,27 @@ indent_style = space
 indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
+
+# YAML files
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
+
+# Shell scripts
+[*.sh]
+indent_style = space
+indent_size = 2
+
+# Docker files
+[{Dockerfile*,*.dockerfile}]
+indent_style = space
+indent_size = 2
+
+# CSS, SCSS
+[*.{css,scss}]
+indent_style = space
+indent_size = 2
