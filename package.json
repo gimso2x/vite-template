@@ -9,7 +9,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "start": "node --experimental-strip-types src/server/production.ts",
+    "start": "node --experimental-strip-types server/production.ts",
     "prepare": "simple-git-hooks",
     "lint": "eslint .",
     "format": "prettier --write .",

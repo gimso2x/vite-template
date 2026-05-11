@@ -5,7 +5,7 @@ import { resolve } from 'node:path';
 import app from './app.ts';
 import { ogInjector } from './middleware/og-injector.ts';
 
-const distPath = resolve(import.meta.dirname ?? '.', '../../dist');
+const distPath = resolve(import.meta.dirname ?? '.', '../dist');
 const indexHtml = readFileSync(resolve(distPath, 'index.html'), 'utf-8');
 
 // Static assets (JS, CSS, images, fonts)

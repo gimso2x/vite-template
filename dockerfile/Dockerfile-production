@@ -53,10 +53,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=builder --chown=node:node /app/package.json ./
 COPY --from=prod-deps --chown=node:node /app/node_modules ./node_modules
 COPY --from=builder --chown=node:node /app/dist ./dist
-COPY --from=builder --chown=node:node /app/src/server ./src/server
+COPY --from=builder --chown=node:node /app/server ./server
 
 USER node
 
 EXPOSE 3000
 
-CMD ["node", "--experimental-strip-types", "src/server/production.ts"]
+CMD ["node", "--experimental-strip-types", "server/production.ts"]

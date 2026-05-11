@@ -15,7 +15,7 @@ export function honoDevMiddleware(): Plugin {
 
         try {
           // Dynamic import so Vite transforms the TS source
-          const mod = await server.ssrLoadModule('/src/server/app.ts');
+          const mod = await server.ssrLoadModule('/server/app.ts');
           const app = mod.default;
 
           const protocol = req.headers['x-forwarded-proto'] ?? 'http';
