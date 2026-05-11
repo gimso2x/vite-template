@@ -16,6 +16,14 @@ Full-stack React SPA built with TanStack Router, TanStack Query, and Hono BFF, u
 - **Git Hooks:** `pnpm install` automatically installs hooks via `prepare` script.
 - **Commit Messages:** Must follow the format `[브랜치명] 작업 요약` (e.g., `[feature/login] 로그인 폼 구현`).
 
+## Design System
+
+- **Source of truth:** `node_modules/@proptier/ground/design.md` (패키지에서 제공)
+- **CSS:** `@import '@proptier/ground/style.css'` — 토큰 + reset + 컴포넌트 스타일 전체 (217KB)
+- **Tokens:** CSS Custom Properties (`var(--color-primary-500)` 등). 전체 목록은 design.md 참조.
+- **Font:** Pretendard Variable (CDN). html `62.5%` 기준 (1rem = 10px).
+- **SCSS 브릿지:** `src/styles/_variables.scss`에서 Ground CSS 변수를 SCSS 변수로 매핑.
+
 ## More Detailed Guides
 
 - Coding Convention: `docs/conventions/coding-convention.md`
