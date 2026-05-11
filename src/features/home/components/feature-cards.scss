@@ -1,0 +1,45 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.features {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-6;
+  padding: $spacing-12 $spacing-8;
+
+  @include respond-to(md) {
+    grid-template-columns: repeat(3, 1fr);
+    padding: $spacing-12;
+  }
+}
+
+.card {
+  @include flex-column;
+  gap: $spacing-3;
+  padding: $spacing-6;
+  border-radius: $radius-xl;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  @include hover-lift;
+
+  &__icon {
+    @include flex-center;
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-md;
+    background: rgba($color-primary, 0.1);
+    color: $color-primary;
+    font-size: $font-size-xl;
+  }
+
+  &__title {
+    @include heading($font-size-lg);
+    color: var(--color-text-heading);
+  }
+
+  &__description {
+    @include body-text($font-size-sm);
+    color: var(--color-text);
+    @include truncate(3);
+  }
+}

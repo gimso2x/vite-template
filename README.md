@@ -1,75 +1,117 @@
-# React + TypeScript + Vite
+# Vite Template
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Vite + React 19 + TanStack Router + TanStack Query + Hono BFF + SCSS로 구성된 프로덕션 레디 프론트엔드 템플릿입니다.
 
-Currently, two official plugins are available:
+## 기술 스택
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| 영역      | 기술                                             |
+| --------- | ------------------------------------------------ |
+| 빌드      | Vite 8 + TypeScript 6                            |
+| UI        | React 19 + React Compiler                        |
+| 라우팅    | TanStack Router (파일 기반, auto code splitting) |
+| 서버 상태 | TanStack Query                                   |
+| BFF       | Hono (Vite dev middleware + Node.js production)  |
+| 스타일    | SCSS (design tokens, light/dark theme)           |
+| 검증      | Zod                                              |
+| 테스트    | Vitest + Testing Library                         |
+| 린트      | ESLint + Prettier                                |
+| Git Hooks | simple-git-hooks + lint-staged                   |
+| 배포      | Docker (multi-stage build)                       |
 
-## React Compiler
+## 시작하기
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+```bash
+# 의존성 설치
+pnpm install
 
-Note: This will impact Vite dev & build performances.
+# 개발 서버 실행
+pnpm dev
 
-## Expanding the ESLint configuration
+# 프로덕션 빌드
+pnpm build
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+# 프로덕션 서버 실행
+pnpm start
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 프로젝트 구조
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+```
+src/
+  routes/             # TanStack Router 파일 기반 라우트
+  features/           # 기능 단위 모듈 (components, hooks, api)
+  components/         # 공용 UI 컴포넌트
+    layout/           # Header, Footer 등 레이아웃
+    ui/               # 공용 UI 요소
+    common/           # 공통 컴포넌트
+  hooks/              # 공용 커스텀 훅
+  lib/                # 공용 클라이언트/설정
+    api/              # API 클라이언트
+    query/            # QueryClient 설정
+  store/              # 전역 상태
+  types/              # 공용 타입
+  constants/          # 공용 상수
+  styles/             # 글로벌 스타일 (변수, 믹스인, 리셋)
+  server/             # Hono BFF 서버
+    routes/           # API 라우트 (health, proxy)
+    middleware/        # 인증, OG 인젝터
+  utils/              # 유틸리티 함수
+  __tests__/          # 테스트 설정 및 공통 테스트
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+자세한 구조 기준은 [docs/conventions/folder-structure-convention.md](docs/conventions/folder-structure-convention.md)을 참고하세요.
+
+## BFF 아키텍처
+
+무거운 SSR 대신 Hono 기반 BFF로 API 프록싱, 보안 검증, 크롤러 OG 태그 주입을 처리합니다.
+
+- **개발**: Vite 플러그인이 `/api/*` 요청을 Hono로 포워딩 (HMR 유지)
+- **운영**: Node.js 서버가 정적 파일 서빙 + SPA fallback + API 프록시 수행
+
+| 엔드포인트        | 설명                   |
+| ----------------- | ---------------------- |
+| `GET /api/health` | 헬스체크 (인증 불필요) |
+| `ALL /api/v1/*`   | 내부 API v1 프록시     |
+| `ALL /api/v2/*`   | 내부 API v2 프록시     |
+
+## 환경변수
+
+`.env.example`을 복사하여 `.env` 파일을 생성하세요.
+
+```bash
+cp .env.example .env
+```
+
+| 변수           | 설명                      | 기본값                  |
+| -------------- | ------------------------- | ----------------------- |
+| `INT_API_URL`  | 내부 API 서버 URL         | `http://localhost:8080` |
+| `INT_API2_URL` | 두 번째 내부 API 서버 URL | `http://localhost:8081` |
+| `PORT`         | 프로덕션 서버 포트        | `3000`                  |
+
+## 명령어
+
+| 명령어          | 설명                             |
+| --------------- | -------------------------------- |
+| `pnpm dev`      | 개발 서버 시작 (Vite + Hono BFF) |
+| `pnpm build`    | 타입체크 + 프로덕션 빌드         |
+| `pnpm start`    | 프로덕션 서버 실행               |
+| `pnpm lint`     | ESLint 실행                      |
+| `pnpm format`   | Prettier 실행                    |
+| `pnpm test`     | Vitest watch 모드                |
+| `pnpm test:run` | Vitest 단일 실행                 |
+| `pnpm preview`  | 빌드 결과 미리보기               |
+
+## 컨벤션
+
+- [코딩 컨벤션](docs/conventions/coding-convention.md)
+- [폴더 구조 컨벤션](docs/conventions/folder-structure-convention.md)
+- [Git 컨벤션](docs/conventions/git-convention.md)
+
+## 커밋 메시지
+
+형식: `[브랜치명] 작업 요약`
+
+```
+[master] 초기 템플릿 설정
+[feature/202605-로그인] 로그인 폼 구현
 ```

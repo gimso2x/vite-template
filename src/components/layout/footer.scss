@@ -1,0 +1,19 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.footer {
+  @include flex-center;
+  padding: $spacing-8;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text);
+  @include body-text($font-size-sm);
+
+  a {
+    color: var(--color-primary);
+    transition: opacity $transition-fast;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

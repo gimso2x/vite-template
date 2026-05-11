@@ -1,0 +1,47 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.hero {
+  @include flex-center;
+  @include flex-column;
+  padding: $spacing-16 $spacing-8;
+  text-align: center;
+  gap: $spacing-6;
+
+  @include respond-to(md) {
+    padding: $spacing-16 $spacing-12;
+  }
+
+  &__badge {
+    @include body-text($font-size-xs);
+    padding: $spacing-1 $spacing-3;
+    border-radius: $radius-full;
+    background: rgba($color-primary, 0.1);
+    color: $color-primary;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    @include heading($font-size-3xl);
+    color: var(--color-text-heading);
+    max-width: 640px;
+
+    @include respond-to(md) {
+      @include heading($font-size-4xl);
+    }
+  }
+
+  &__description {
+    @include body-text($font-size-lg);
+    color: var(--color-text);
+    max-width: 480px;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-3;
+    margin-top: $spacing-4;
+  }
+}

@@ -1,0 +1,23 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.counter-section {
+  @include flex-center;
+  @include flex-column;
+  gap: $spacing-4;
+  padding: $spacing-12 $spacing-8;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+
+  &__value {
+    @include heading($font-size-4xl);
+    color: var(--color-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__controls {
+    display: flex;
+    gap: $spacing-3;
+  }
+}

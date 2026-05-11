@@ -1,0 +1,45 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.header {
+  @include flex-between;
+  padding: $spacing-4 $spacing-8;
+  border-bottom: 1px solid var(--color-border);
+  @include glass-effect(0.9);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  @include respond-to(md) {
+    padding: $spacing-4 $spacing-12;
+  }
+
+  &__logo {
+    @include heading($font-size-xl);
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+
+    svg {
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    gap: $spacing-6;
+
+    a {
+      @include body-text($font-size-sm);
+      color: var(--color-text);
+      transition: color $transition-fast;
+      @include focus-ring;
+
+      &:hover {
+        color: var(--color-text-heading);
+      }
+    }
+  }
+}
