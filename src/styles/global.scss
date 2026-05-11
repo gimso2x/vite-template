@@ -1,0 +1,52 @@
+@use 'variables' as *;
+@use 'reset';
+
+// ============================================
+// Global Styles
+// ============================================
+
+:root {
+  // Light theme (default)
+  --color-bg: #{$light-bg};
+  --color-text: #{$light-text};
+  --color-text-heading: #{$light-text-heading};
+  --color-border: #{$light-border};
+  --color-surface: #{$light-surface};
+  --color-code-bg: #{$light-code-bg};
+  --color-primary: #{$color-primary};
+  --color-primary-light: #{$color-primary-light};
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #{$dark-bg};
+    --color-text: #{$dark-text};
+    --color-text-heading: #{$dark-text-heading};
+    --color-border: #{$dark-border};
+    --color-surface: #{$dark-surface};
+    --color-code-bg: #{$dark-code-bg};
+  }
+}
+
+body {
+  font-family: $font-sans;
+  font-size: $font-size-base;
+  line-height: $line-height-normal;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+code,
+pre {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+}
+
+code {
+  padding: $spacing-1 $spacing-2;
+  border-radius: $radius-sm;
+  background: var(--color-code-bg);
+  color: var(--color-text-heading);
+}
