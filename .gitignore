@@ -23,6 +23,9 @@ coverage
 # TypeScript
 *.tsbuildinfo
 
+# ESLint
+eslint-config-output.json
+
 # Editor directories and files
 .idea
 .DS_Store
