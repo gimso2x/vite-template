@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from '@tanstack/react-router';
 import { z } from 'zod/v4';
+import { ApiError } from '@/lib/api';
 import { useAuthActions } from '../context/auth-provider';
 import { useAuthStore } from '@/store';
 import './signup-form.scss';
@@ -21,6 +24,8 @@ type SignupFormData = z.infer<typeof signupSchema>;
 export default function SignupForm() {
   const { signup } = useAuthActions();
   const isLoading = useAuthStore((s) => s.isLoading);
+  const navigate = useNavigate();
+  const [serverError, setServerError] = useState('');
 
   const {
     register,
@@ -32,6 +37,7 @@ export default function SignupForm() {
   });
 
   const onSubmit = async (data: SignupFormData) => {
+    setServerError('');
     const result = signupSchema.safeParse(data);
     if (!result.success) {
       result.error.issues.forEach((issue) => {
@@ -41,7 +47,16 @@ export default function SignupForm() {
       return;
     }
     const { confirmPassword: _, ...params } = result.data;
-    await signup(params);
+    try {
+      await signup(params);
+      navigate({ to: '/dashboard' });
+    } catch (e) {
+      if (e instanceof ApiError) {
+        setServerError(e.message);
+      } else {
+        setServerError('회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      }
+    }
   };
 
   return (
@@ -71,6 +86,8 @@ export default function SignupForm() {
         <input id="signup-confirm" type="password" {...register('confirmPassword')} />
         {errors.confirmPassword && <span className="signup-form__error">{errors.confirmPassword.message}</span>}
       </div>
+
+      {serverError && <p className="signup-form__error">{serverError}</p>}
 
       <button className="signup-form__submit" type="submit" disabled={isLoading}>
         {isLoading ? '가입 중...' : '회원가입'}

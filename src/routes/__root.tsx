@@ -17,7 +17,7 @@ export const Route = createRootRoute({
   ),
 });
 
-function RootComponent() {
+export function RootComponent() {
   return (
     <ErrorBoundary>
       <Outlet />
@@ -39,7 +39,7 @@ function RootComponent() {
   );
 }
 
-function RootError({ message }: { message: string }) {
+export function RootError({ message }: { message: string }) {
   return (
     <div style={{ padding: '2rem', textAlign: 'center' }}>
       <h2>오류가 발생했습니다</h2>

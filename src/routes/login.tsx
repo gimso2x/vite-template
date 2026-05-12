@@ -1,13 +1,19 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, redirect } from '@tanstack/react-router';
 import LoginForm from '@/features/auth/components/login-form';
 import SignupForm from '@/features/auth/components/signup-form';
+import { isAuthenticated } from '@/store';
 import { useState } from 'react';
 
 export const Route = createFileRoute('/login')({
+  beforeLoad: () => {
+    if (isAuthenticated()) {
+      throw redirect({ to: '/dashboard' });
+    }
+  },
   component: LoginPage,
 });
 
-export default function LoginPage() {
+function LoginPage() {
   const [mode, setMode] = useState<'login' | 'signup'>('login');
 
   return (

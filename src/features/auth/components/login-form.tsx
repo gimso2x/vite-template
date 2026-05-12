@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from '@tanstack/react-router';
 import { z } from 'zod/v4';
+import { ApiError } from '@/lib/api';
 import { useAuthActions } from '../context/auth-provider';
 import { useAuthStore } from '@/store';
 import './login-form.scss';
@@ -14,6 +17,8 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export default function LoginForm() {
   const { login } = useAuthActions();
   const isLoading = useAuthStore((s) => s.isLoading);
+  const navigate = useNavigate();
+  const [serverError, setServerError] = useState('');
 
   const {
     register,
@@ -25,6 +30,7 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
+    setServerError('');
     const result = loginSchema.safeParse(data);
     if (!result.success) {
       result.error.issues.forEach((issue) => {
@@ -33,7 +39,16 @@ export default function LoginForm() {
       });
       return;
     }
-    await login(result.data);
+    try {
+      await login(result.data);
+      navigate({ to: '/dashboard' });
+    } catch (e) {
+      if (e instanceof ApiError) {
+        setServerError(e.message);
+      } else {
+        setServerError('로그인에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      }
+    }
   };
 
   return (
@@ -51,6 +66,8 @@ export default function LoginForm() {
         <input id="login-password" type="password" {...register('password')} />
         {errors.password && <span className="login-form__error">{errors.password.message}</span>}
       </div>
+
+      {serverError && <p className="login-form__error">{serverError}</p>}
 
       <button className="login-form__submit" type="submit" disabled={isLoading}>
         {isLoading ? '로그인 중...' : '로그인'}

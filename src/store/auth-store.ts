@@ -9,13 +9,14 @@ export type AuthUser = {
 
 type AuthState = {
   user: AuthUser | null;
-  token: string | null;
-  isAuthenticated: boolean;
+  accessToken: string | null;
+  refreshToken: string | null;
   isLoading: boolean;
 };
 
 type AuthActions = {
-  setUser: (user: AuthUser, token: string) => void;
+  setAuth: (user: AuthUser, accessToken: string, refreshToken: string) => void;
+  setTokens: (accessToken: string, refreshToken: string) => void;
   setLoading: (loading: boolean) => void;
   logout: () => void;
 };
@@ -24,19 +25,45 @@ export const useAuthStore = create<AuthState & AuthActions>()(
   persist(
     (set) => ({
       user: null,
-      token: null,
-      isAuthenticated: false,
+      accessToken: null,
+      refreshToken: null,
       isLoading: false,
 
-      setUser: (user, token) => set({ user, token, isAuthenticated: true, isLoading: false }),
+      setAuth: (user, accessToken, refreshToken) => set({ user, accessToken, refreshToken, isLoading: false }),
+
+      setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
 
       setLoading: (isLoading) => set({ isLoading }),
 
-      logout: () => set({ user: null, token: null, isAuthenticated: false, isLoading: false }),
+      logout: () => set({ user: null, accessToken: null, refreshToken: null, isLoading: false }),
     }),
     {
       name: 'auth-storage',
-      partialize: (state) => ({ user: state.user, token: state.token }),
+      version: 1,
+      partialize: (state) => ({
+        user: state.user,
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
+      }),
+      migrate: (
+        persisted,
+        version,
+      ): { user: AuthUser | null; accessToken: string | null; refreshToken: string | null } => {
+        if (version === 0) {
+          const old = persisted as Record<string, unknown>;
+          return { user: (old['user'] as AuthUser) ?? null, accessToken: null, refreshToken: null };
+        }
+        const data = persisted as Record<string, unknown>;
+        return {
+          user: (data['user'] as AuthUser) ?? null,
+          accessToken: (data['accessToken'] as string) ?? null,
+          refreshToken: (data['refreshToken'] as string) ?? null,
+        };
+      },
     },
   ),
 );
+
+export function isAuthenticated(): boolean {
+  return useAuthStore.getState().accessToken !== null;
+}

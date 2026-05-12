@@ -32,9 +32,10 @@ vi.mock('@/features/home/hooks/use-sample-query', () => ({
 
 // Mock auth store (Header uses useAuth)
 vi.mock('@/store', () => ({
-  useAuthStore: Object.assign(() => ({ isAuthenticated: false, user: null, token: null, isLoading: false }), {
-    getState: () => ({ isAuthenticated: false }),
+  useAuthStore: Object.assign(() => ({ user: null, accessToken: null, refreshToken: null, isLoading: false }), {
+    getState: () => ({ accessToken: null }),
   }),
+  isAuthenticated: () => false,
 }));
 
 // Mock auth actions (Header uses useAuthActions)

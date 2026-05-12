@@ -5,6 +5,7 @@ const users: Array<AuthUser & { password: string }> = [
 ];
 
 let nextId = 2;
+const refreshTokens = new Map<string, string>();
 
 export function findUser(email: string, password: string): (AuthUser & { password: string }) | undefined {
   return users.find((u) => u.email === email && u.password === password);
@@ -21,6 +22,24 @@ export function createUser(email: string, password: string, name: string): AuthU
   return { id: user.id, email: user.email, name: user.name };
 }
 
-export function generateToken(): string {
-  return `mock-token-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+export function findUserById(id: string): AuthUser | undefined {
+  return users.find((u) => u.id === id);
+}
+
+export function generateAccessToken(): string {
+  return `access-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+export function generateRefreshToken(userId: string): string {
+  const token = `refresh-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  refreshTokens.set(token, userId);
+  return token;
+}
+
+export function validateRefreshToken(token: string): string | null {
+  return refreshTokens.get(token) ?? null;
+}
+
+export function revokeRefreshToken(token: string): void {
+  refreshTokens.delete(token);
 }

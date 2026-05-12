@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/store';
 
 export function useAuth() {
-  const { user, token, isAuthenticated, isLoading } = useAuthStore();
-  return { user, token, isAuthenticated, isLoading };
+  const { user, accessToken, refreshToken, isLoading } = useAuthStore();
+  return { user, accessToken, refreshToken, isAuthenticated: accessToken !== null, isLoading };
 }

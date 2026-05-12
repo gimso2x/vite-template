@@ -22,7 +22,7 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true, allowExportNames: ['Route'] }],
       'unused-imports/no-unused-imports': 'error',
       '@typescript-eslint/no-unused-vars': [
         'error',
@@ -43,6 +43,12 @@ export default defineConfig([
       'no-console': 'warn',
       'react/no-danger': 'warn',
       'react/no-array-index-key': 'warn',
+    },
+  },
+  {
+    files: ['src/routes/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
     },
   },
   eslintConfigPrettier,

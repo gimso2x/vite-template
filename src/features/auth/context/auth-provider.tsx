@@ -1,15 +1,20 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, type ReactNode, useCallback } from 'react';
 import { fetchApi } from '@/lib/api';
 import { useAuthStore, type AuthUser } from '@/store';
 
 type LoginParams = { email: string; password: string };
 type SignupParams = { email: string; password: string; name: string };
-type AuthResponse = { user: AuthUser; token: string };
+type AuthResponse = {
+  user: AuthUser;
+  accessToken: string;
+  refreshToken: string;
+};
 
 type AuthContextValue = {
   login: (params: LoginParams) => Promise<void>;
   signup: (params: SignupParams) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -20,8 +25,8 @@ export function useAuthActions() {
   return ctx;
 }
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const { setUser, logout: storeLogout, setLoading } = useAuthStore();
+export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
+  const { setAuth, logout: storeLogout, setLoading } = useAuthStore();
 
   const login = useCallback(
     async (params: LoginParams) => {
@@ -31,12 +36,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           method: 'POST',
           body: params,
         });
-        setUser(data.user, data.token);
+        setAuth(data.user, data.accessToken, data.refreshToken);
       } finally {
         setLoading(false);
       }
     },
-    [setUser, setLoading],
+    [setAuth, setLoading],
   );
 
   const signup = useCallback(
@@ -47,16 +52,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           method: 'POST',
           body: params,
         });
-        setUser(data.user, data.token);
+        setAuth(data.user, data.accessToken, data.refreshToken);
       } finally {
         setLoading(false);
       }
     },
-    [setUser, setLoading],
+    [setAuth, setLoading],
   );
 
-  const logout = useCallback(() => {
-    storeLogout();
+  const logout = useCallback(async () => {
+    try {
+      await fetchApi<void>('/v1/auth/logout', { method: 'POST' });
+    } finally {
+      storeLogout();
+    }
   }, [storeLogout]);
 
   return <AuthContext.Provider value={{ login, signup, logout }}>{children}</AuthContext.Provider>;
