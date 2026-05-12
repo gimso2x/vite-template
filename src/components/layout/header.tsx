@@ -1,21 +1,33 @@
+import { Link } from '@tanstack/react-router';
+import { useAuth } from '@/features/auth/hooks/use-auth';
+import { useAuthActions } from '@/features/auth/context/auth-provider';
 import './header.scss';
 
 function Header() {
+  const { isAuthenticated, user } = useAuth();
+  const { logout } = useAuthActions();
+
   return (
     <header className="header">
-      <div className="header__logo">
+      <Link to="/" className="header__logo">
         <svg viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
         </svg>
         Template
-      </div>
+      </Link>
       <nav className="header__nav">
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          Docs
-        </a>
-        <a href="https://github.com" target="_blank" rel="noreferrer">
-          GitHub
-        </a>
+        <Link to="/">홈</Link>
+        {isAuthenticated ? (
+          <>
+            <Link to="/dashboard">Dashboard</Link>
+            <span className="header__user">{user?.name}</span>
+            <button className="header__logout" onClick={logout}>
+              로그아웃
+            </button>
+          </>
+        ) : (
+          <Link to="/login">로그인</Link>
+        )}
       </nav>
     </header>
   );

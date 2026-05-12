@@ -20,6 +20,7 @@
     display: flex;
     align-items: center;
     gap: $spacing-2;
+    text-decoration: none;
 
     svg {
       width: 28px;
@@ -29,17 +30,48 @@
 
   &__nav {
     display: flex;
-    gap: $spacing-6;
+    align-items: center;
+    gap: $spacing-4;
 
-    a {
+    a,
+    button {
       @include body-text($font-size-sm);
       color: var(--color-text);
       transition: color $transition-fast;
       @include focus-ring;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
 
       &:hover {
         color: var(--color-text-heading);
       }
+    }
+  }
+
+  &__user {
+    @include body-text($font-size-sm);
+    color: var(--color-text);
+    padding: $spacing-1 $spacing-3;
+    background: var(--color-surface);
+    border-radius: $radius-full;
+  }
+
+  &__logout {
+    padding: $spacing-1 $spacing-3;
+    border-radius: $radius-md;
+    border: 1px solid var(--color-border);
+    font-size: $font-size-sm;
+    color: var(--color-text);
+    background: transparent;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: var(--color-red-50);
+      border-color: var(--color-red-300);
+      color: var(--color-red-500);
     }
   }
 }

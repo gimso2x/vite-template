@@ -7,6 +7,7 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     RouterProvider: ({ router: _router }: { router: unknown }) => <div>Router Mock</div>,
+    Link: ({ children, ...props }: { children: React.ReactNode; to: string }) => <a href={props.to}>{children}</a>,
   };
 });
 
@@ -27,6 +28,18 @@ vi.mock('@/features/home/hooks/use-sample-query', () => ({
     error: null,
     isSuccess: true,
   }),
+}));
+
+// Mock auth store (Header uses useAuth)
+vi.mock('@/store', () => ({
+  useAuthStore: Object.assign(() => ({ isAuthenticated: false, user: null, token: null, isLoading: false }), {
+    getState: () => ({ isAuthenticated: false }),
+  }),
+}));
+
+// Mock auth actions (Header uses useAuthActions)
+vi.mock('@/features/auth/context/auth-provider', () => ({
+  useAuthActions: () => ({ login: vi.fn(), signup: vi.fn(), logout: vi.fn() }),
 }));
 
 describe('App', () => {
