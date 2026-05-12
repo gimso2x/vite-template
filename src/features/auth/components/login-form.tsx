@@ -1,9 +1,7 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from '@tanstack/react-router';
 import { z } from 'zod/v4';
-import { ApiError } from '@/lib/api';
 import { useAuthActions } from '../context/auth-provider';
+import { useAuthSubmit } from '../hooks/use-auth-submit';
 import { useAuthStore } from '@/store';
 import './login-form.scss';
 
@@ -17,8 +15,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export default function LoginForm() {
   const { login } = useAuthActions();
   const isLoading = useAuthStore((s) => s.isLoading);
-  const navigate = useNavigate();
-  const [serverError, setServerError] = useState('');
+  const { serverError, submit } = useAuthSubmit();
 
   const {
     register,
@@ -30,7 +27,6 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    setServerError('');
     const result = loginSchema.safeParse(data);
     if (!result.success) {
       result.error.issues.forEach((issue) => {
@@ -39,16 +35,7 @@ export default function LoginForm() {
       });
       return;
     }
-    try {
-      await login(result.data);
-      navigate({ to: '/dashboard' });
-    } catch (e) {
-      if (e instanceof ApiError) {
-        setServerError(e.message);
-      } else {
-        setServerError('로그인에 실패했습니다. 잠시 후 다시 시도해주세요.');
-      }
-    }
+    await submit(() => login(result.data));
   };
 
   return (

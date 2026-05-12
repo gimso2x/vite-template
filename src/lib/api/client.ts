@@ -1,5 +1,6 @@
 import { env } from '@/lib/env';
 import { ApiError, type ApiResponse, type RequestOptions } from './types';
+import type { useAuthStore } from '@/store';
 
 const DEFAULT_HEADERS: Record<string, string> = {
   'Content-Type': 'application/json',
@@ -7,6 +8,15 @@ const DEFAULT_HEADERS: Record<string, string> = {
 
 let isRefreshing = false;
 let refreshPromise: Promise<void> | null = null;
+let storeRef: typeof useAuthStore | null = null;
+
+async function getStore() {
+  if (!storeRef) {
+    const mod = await import('@/store');
+    storeRef = mod.useAuthStore;
+  }
+  return storeRef;
+}
 
 function buildUrl(path: string, params?: Record<string, string>): string {
   const url = new URL(`${env.VITE_API_URL}${path}`);
@@ -17,8 +27,8 @@ function buildUrl(path: string, params?: Record<string, string>): string {
 }
 
 async function refreshTokens(): Promise<void> {
-  const { useAuthStore } = await import('@/store');
-  const { refreshToken, setTokens, logout } = useAuthStore.getState();
+  const store = await getStore();
+  const { refreshToken, setTokens, logout } = store.getState();
 
   if (!refreshToken) {
     logout();
@@ -42,10 +52,8 @@ async function refreshTokens(): Promise<void> {
 
 async function fetchApi<T>(path: string, options: RequestOptions = {}): Promise<ApiResponse<T>> {
   const { method = 'GET', body, headers = {}, params } = options;
-
-  // Dynamic import to avoid circular dependency
-  const { useAuthStore } = await import('@/store');
-  const accessToken = useAuthStore.getState().accessToken;
+  const store = await getStore();
+  const accessToken = store.getState().accessToken;
 
   const headersInit: Record<string, string> = {
     ...DEFAULT_HEADERS,
@@ -53,11 +61,14 @@ async function fetchApi<T>(path: string, options: RequestOptions = {}): Promise<
     ...headers,
   };
 
-  const res = await fetch(buildUrl(path, params), {
-    method,
-    headers: headersInit,
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  const makeRequest = (overrideHeaders?: Record<string, string>) =>
+    fetch(buildUrl(path, params), {
+      method,
+      headers: overrideHeaders ?? headersInit,
+      body: body ? JSON.stringify(body) : undefined,
+    });
+
+  const res = await makeRequest();
 
   if (res.status === 401 && path !== '/v1/auth/refresh') {
     if (!isRefreshing) {
@@ -74,17 +85,13 @@ async function fetchApi<T>(path: string, options: RequestOptions = {}): Promise<
       throw new ApiError('Unauthorized', 401);
     }
 
-    const newToken = useAuthStore.getState().accessToken;
+    const newToken = store.getState().accessToken;
     const retryHeaders: Record<string, string> = {
       ...headersInit,
       ...(newToken ? { Authorization: `Bearer ${newToken}` } : {}),
     };
 
-    const retryRes = await fetch(buildUrl(path, params), {
-      method,
-      headers: retryHeaders,
-      body: body ? JSON.stringify(body) : undefined,
-    });
+    const retryRes = await makeRequest(retryHeaders);
 
     if (!retryRes.ok) {
       const errorBody = await retryRes.json().catch(() => ({ message: retryRes.statusText }));
@@ -100,7 +107,6 @@ async function fetchApi<T>(path: string, options: RequestOptions = {}): Promise<
     throw new ApiError(errorBody.message ?? res.statusText, res.status, errorBody.code);
   }
 
-  // Handle 204 No Content
   if (res.status === 204) {
     return { data: undefined as T, status: res.status };
   }

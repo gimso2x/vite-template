@@ -14,8 +14,19 @@ function extractBearerToken(request: Request): string | null {
   return auth?.startsWith('Bearer ') ? auth.slice(7) : null;
 }
 
-// Access tokens are short-lived in production; here we encode userId for lookup
 const accessTokenToUser = new Map<string, string>();
+
+function issueTokenPair(userId: string) {
+  const accessToken = generateAccessToken();
+  const refreshToken = generateRefreshToken(userId);
+  accessTokenToUser.set(accessToken, userId);
+  return { accessToken, refreshToken };
+}
+
+function resolveUserByAccessToken(token: string) {
+  const userId = accessTokenToUser.get(token);
+  return userId ? findUserById(userId) : undefined;
+}
 
 export const handlers = [
   http.post('*/api/v1/auth/login', async ({ request }) => {
@@ -30,14 +41,9 @@ export const handlers = [
       return HttpResponse.json({ message: '이메일 또는 비밀번호가 올바르지 않습니다' }, { status: 401 });
     }
 
-    const accessToken = generateAccessToken();
-    const refreshToken = generateRefreshToken(user.id);
-    accessTokenToUser.set(accessToken, user.id);
-
     return HttpResponse.json({
       user: { id: user.id, email: user.email, name: user.name },
-      accessToken,
-      refreshToken,
+      ...issueTokenPair(user.id),
     });
   }),
 
@@ -49,15 +55,7 @@ export const handlers = [
     }
 
     const user = createUser(body.email, body.password, body.name);
-    const accessToken = generateAccessToken();
-    const refreshToken = generateRefreshToken(user.id);
-    accessTokenToUser.set(accessToken, user.id);
-
-    return HttpResponse.json({
-      user,
-      accessToken,
-      refreshToken,
-    });
+    return HttpResponse.json({ user, ...issueTokenPair(user.id) });
   }),
 
   http.post('*/api/v1/auth/refresh', async ({ request }) => {
@@ -72,11 +70,7 @@ export const handlers = [
       return HttpResponse.json({ message: 'Invalid refresh token' }, { status: 401 });
     }
 
-    const accessToken = generateAccessToken();
-    const refreshToken = generateRefreshToken(userId);
-    accessTokenToUser.set(accessToken, userId);
-
-    return HttpResponse.json({ accessToken, refreshToken });
+    return HttpResponse.json(issueTokenPair(userId));
   }),
 
   http.post('*/api/v1/auth/logout', async ({ request }) => {
@@ -93,18 +87,11 @@ export const handlers = [
       return HttpResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = accessTokenToUser.get(token);
-    if (!userId) {
+    const user = resolveUserByAccessToken(token);
+    if (!user) {
       return HttpResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const user = findUserById(userId);
-    if (!user) {
-      return HttpResponse.json({ message: 'User not found' }, { status: 401 });
-    }
-
-    return HttpResponse.json({
-      user: { id: user.id, email: user.email, name: user.name },
-    });
+    return HttpResponse.json({ user: { id: user.id, email: user.email, name: user.name } });
   }),
 ];

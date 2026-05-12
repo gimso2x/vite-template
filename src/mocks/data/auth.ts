@@ -26,12 +26,16 @@ export function findUserById(id: string): AuthUser | undefined {
   return users.find((u) => u.id === id);
 }
 
+function generateToken(prefix: string): string {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
 export function generateAccessToken(): string {
-  return `access-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  return generateToken('access');
 }
 
 export function generateRefreshToken(userId: string): string {
-  const token = `refresh-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const token = generateToken('refresh');
   refreshTokens.set(token, userId);
   return token;
 }
