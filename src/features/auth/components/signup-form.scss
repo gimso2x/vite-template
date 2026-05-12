@@ -1,0 +1,73 @@
+@use '@/styles/variables' as *;
+
+.signup-form {
+  max-width: 400px;
+  width: 100%;
+  padding: $spacing-8;
+  background: var(--color-surface);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-md;
+
+  &__title {
+    font-size: $font-size-xl;
+    color: var(--color-text-heading);
+    text-align: center;
+    margin-bottom: $spacing-6;
+  }
+
+  &__field {
+    margin-bottom: $spacing-4;
+
+    label {
+      display: block;
+      font-size: $font-size-sm;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: $spacing-1;
+    }
+
+    input {
+      width: 100%;
+      padding: $spacing-2 $spacing-3;
+      border: 1px solid var(--color-border);
+      border-radius: $radius-md;
+      font-size: $font-size-base;
+      transition: border-color $transition-fast;
+
+      &:focus {
+        outline: none;
+        border-color: $color-primary;
+      }
+    }
+  }
+
+  &__error {
+    display: block;
+    font-size: $font-size-xs;
+    color: var(--color-red-500);
+    margin-top: $spacing-1;
+  }
+
+  &__submit {
+    width: 100%;
+    padding: $spacing-3;
+    border: none;
+    border-radius: $radius-md;
+    background: $color-primary;
+    color: var(--color-gray-0);
+    font-size: $font-size-base;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background $transition-fast;
+    margin-top: $spacing-2;
+
+    &:hover:not(:disabled) {
+      background: $color-primary-dark;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}

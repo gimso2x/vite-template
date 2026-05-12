@@ -1,0 +1,39 @@
+@use '@/styles/variables' as *;
+
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+
+  &__code {
+    font-size: 8rem;
+    font-weight: 800;
+    color: $color-primary;
+    line-height: 1;
+    margin-bottom: $spacing-2;
+  }
+
+  &__message {
+    font-size: $font-size-lg;
+    color: var(--color-text);
+    margin-bottom: $spacing-6;
+  }
+
+  &__link {
+    padding: $spacing-2 $spacing-6;
+    border-radius: $radius-md;
+    background: $color-primary;
+    color: var(--color-gray-0);
+    font-size: $font-size-sm;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background $transition-fast;
+
+    &:hover {
+      background: $color-primary-dark;
+    }
+  }
+}

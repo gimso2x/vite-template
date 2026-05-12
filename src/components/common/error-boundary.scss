@@ -1,0 +1,54 @@
+@use '@/styles/variables' as *;
+
+.error-boundary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: $spacing-8;
+  text-align: center;
+
+  &__icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--color-red-100);
+    color: var(--color-red-500);
+    font-size: 2.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: $spacing-4;
+  }
+
+  &__title {
+    font-size: $font-size-xl;
+    color: var(--color-text-heading);
+    margin-bottom: $spacing-2;
+  }
+
+  &__message {
+    font-size: $font-size-sm;
+    color: var(--color-text);
+    margin-bottom: $spacing-6;
+    max-width: 400px;
+  }
+
+  &__retry {
+    padding: $spacing-2 $spacing-6;
+    border-radius: $radius-md;
+    background: $color-primary;
+    color: var(--color-gray-0);
+    font-size: $font-size-sm;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background $transition-fast;
+
+    &:hover {
+      background: $color-primary-dark;
+    }
+  }
+}
