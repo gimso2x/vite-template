@@ -8,36 +8,51 @@
 
 ### 1. 가독성 (Readability)
 
-코드가 읽기 쉬운 정도입니다. 읽기 좋은 코드는 한 번에 고려하는 맥락이 적고 위에서 아래로 자연스럽게 이어집니다.
+코드가 읽기 쉬운 정도입니다. 코드가 변경하기 쉬우려면 먼저 코드가 어떤 동작을 하는지 이해할 수 있어야 합니다. 읽기 좋은 코드는 읽는 사람이 한 번에 머릿속에서 고려하는 맥락이 적고, 위에서 아래로 자연스럽게 이어집니다.
 
-- **맥락 줄이기**: 같이 실행되지 않는 코드는 분리하고, 구현 상세는 추상화합니다.
-- **이름 붙이기**: 복잡한 조건과 매직 넘버에 의미 있는 이름을 붙입니다.
-- **위에서 아래로**: 시점 이동을 줄이고 삼항 연산자를 단순하게 유지합니다.
+- **맥락 줄이기**
+  - [같이 실행되지 않는 코드 분리하기](https://frontend-fundamentals.com/code-quality/code/examples/submit-button.html)
+  - [구현 상세 추상화하기](https://frontend-fundamentals.com/code-quality/code/examples/login-start-page.html)
+  - [로직 종류에 따라 합쳐진 함수 쪼개기](https://frontend-fundamentals.com/code-quality/code/examples/use-page-state-readability.html)
+- **이름 붙이기**
+  - [복잡한 조건에 이름 붙이기](https://frontend-fundamentals.com/code-quality/code/examples/condition-name.html)
+  - [매직 넘버에 이름 붙이기](https://frontend-fundamentals.com/code-quality/code/examples/magic-number-readability.html)
+- **위에서 아래로 읽히게 하기**
+  - [시점 이동 줄이기](https://frontend-fundamentals.com/code-quality/code/examples/user-policy.html)
+  - [삼항 연산자 단순하게 하기](https://frontend-fundamentals.com/code-quality/code/examples/ternary-operator.html)
 
 ### 2. 예측 가능성 (Predictability)
 
-함수나 컴포넌트의 동작을 이름과 시그니처만으로 예측할 수 있어야 합니다.
+함께 협업하는 동료들이 함수나 컴포넌트의 동작을 얼마나 예측할 수 있는지를 말합니다. 예측 가능성이 높은 코드는 일관적인 규칙을 따르고, 함수나 컴포넌트의 이름과 파라미터, 반환 값만 보고도 어떤 동작을 하는지 알 수 있습니다.
 
-- **이름 겹치지 않게**: 같은 모듈 내에서 의미가 다르면 다른 이름을 사용합니다.
-- **반환 타입 통일**: 같은 종류의 함수는 반환 타입을 통일합니다.
-- **숨은 로직 드러내기**: 부작용(네트워크, 네비게이션)이 있으면 시그니처에 드러냅니다.
+- [이름 겹치지 않게 관리하기](https://frontend-fundamentals.com/code-quality/code/examples/http.html)
+- [같은 종류의 함수는 반환 타입 통일하기](https://frontend-fundamentals.com/code-quality/code/examples/use-user.html)
+- [숨은 로직 드러내기](https://frontend-fundamentals.com/code-quality/code/examples/hidden-logic.html)
 
 ### 3. 응집도 (Cohesion)
 
-수정되어야 할 코드가 항상 같이 수정되도록 구조화합니다.
+수정되어야 할 코드가 항상 같이 수정되는지를 말합니다. 응집도가 높은 코드는 코드의 한 부분을 수정해도 의도치 않게 다른 부분에서 오류가 발생하지 않습니다. 함께 수정되어야 할 부분이 반드시 함께 수정되도록 구조적으로 뒷받침되기 때문입니다.
 
-- 가독성과 응집도는 상충할 수 있습니다. 함께 수정되지 않으면 오류가 발생할 수 있는 경우 응집도를, 위험성이 낮은 경우 가독성을 우선합니다.
-- **함께 수정되는 파일은 같은 디렉토리에**: 타입, 스키마, API 호출, 컴포넌트가 한 기능 단위로 응집합니다.
-- **매직 넘버 없애기**: 상태 값은 의미 있는 상수나 타입으로 관리합니다.
-- **폼 응집도**: 폼 필드의 변경 단위에 따라 필드 단위 또는 폼 전체 단위로 관리합니다.
+- [함께 수정되는 파일을 같은 디렉토리에 두기](https://frontend-fundamentals.com/code-quality/code/examples/code-directory.html)
+- [매직 넘버 없애기](https://frontend-fundamentals.com/code-quality/code/examples/magic-number-cohesion.html)
+- [폼의 응집도 생각하기](https://frontend-fundamentals.com/code-quality/code/examples/form-fields.html)
 
 ### 4. 결합도 (Coupling)
 
-코드를 수정했을 때 영향 범위가 적어야 합니다. 결합도가 낮으면 변경에 따른 범위를 예측할 수 있습니다.
+코드를 수정했을 때의 영향 범위를 말합니다. 코드를 수정했을 때 영향 범위가 적어서, 변경에 따른 범위를 예측할 수 있는 코드가 수정하기 쉬운 코드입니다.
 
-- **책임을 하나씩**: 훅이나 함수가 여러 책임을 가지면 분리합니다.
-- **중복 코드 허용**: 얽히지 않는 코드는 과도한 추상화 대신 복제를 허용합니다.
-- **Props Drilling 지우기**: 깊이 전달되는 props는 Context나 상태 관리로 대체합니다.
+- [책임을 하나씩 관리하기](https://frontend-fundamentals.com/code-quality/code/examples/use-page-state-coupling.html)
+- [중복 코드 허용하기](https://frontend-fundamentals.com/code-quality/code/examples/use-bottom-sheet.html)
+- [Props Drilling 지우기](https://frontend-fundamentals.com/code-quality/code/examples/item-edit-modal.html)
+
+### 기준 간 상충
+
+아쉽게도 이 4가지 기준을 모두 한꺼번에 충족하기는 어렵습니다. 기준 사이에는 상충이 존재합니다.
+
+- **응집도 vs 가독성**: 응집도를 높이기 위해 공통화·추상화하면 코드가 한 차례 추상화되어 가독성이 떨어집니다. 함께 수정되지 않으면 오류가 발생할 수 있는 경우에는 응집도를 우선하세요. 위험성이 높지 않은 경우에는 가독성을 우선하여 코드 중복을 허용하세요.
+- **결합도 vs 응집도**: 중복 코드를 허용하면 영향 범위를 줄일 수 있어 결합도는 낮아지지만, 한쪽을 수정할 때 다른 쪽을 실수로 수정하지 못할 수 있어 응집도는 떨어집니다.
+
+프론트엔드 개발자는 현재 직면한 상황을 바탕으로, 장기적으로 코드가 수정하기 쉽게 하기 위해 어떤 가치를 우선해야 하는지 고민해야 합니다.
 
 ## 기본 원칙
 
