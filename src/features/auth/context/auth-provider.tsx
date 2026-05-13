@@ -1,15 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, type ReactNode, useCallback } from 'react';
-import { fetchApi } from '@/lib/api';
-import { useAuthStore, type AuthUser } from '@/store';
-
-type LoginParams = { email: string; password: string };
-type SignupParams = { email: string; password: string; name: string };
-type AuthResponse = {
-  user: AuthUser;
-  accessToken: string;
-  refreshToken: string;
-};
+import { useAuthStore } from '@/store';
+import { loginApi, signupApi, logoutApi } from '../api';
+import type { LoginParams, SignupParams } from '../types';
 
 type AuthContextValue = {
   login: (params: LoginParams) => Promise<void>;
@@ -32,11 +25,8 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     async (params: LoginParams) => {
       setLoading(true);
       try {
-        const { data } = await fetchApi<AuthResponse>('/v1/auth/login', {
-          method: 'POST',
-          body: params,
-        });
-        setAuth(data.user, data.accessToken, data.refreshToken);
+        const { user, accessToken, refreshToken } = await loginApi(params);
+        setAuth(user, accessToken, refreshToken);
       } finally {
         setLoading(false);
       }
@@ -48,11 +38,8 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     async (params: SignupParams) => {
       setLoading(true);
       try {
-        const { data } = await fetchApi<AuthResponse>('/v1/auth/signup', {
-          method: 'POST',
-          body: params,
-        });
-        setAuth(data.user, data.accessToken, data.refreshToken);
+        const { user, accessToken, refreshToken } = await signupApi(params);
+        setAuth(user, accessToken, refreshToken);
       } finally {
         setLoading(false);
       }
@@ -62,7 +49,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
 
   const logout = useCallback(async () => {
     try {
-      await fetchApi<void>('/v1/auth/logout', { method: 'POST' });
+      await logoutApi();
     } finally {
       storeLogout();
     }

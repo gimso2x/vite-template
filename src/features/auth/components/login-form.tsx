@@ -1,16 +1,10 @@
 import { useForm } from 'react-hook-form';
-import { z } from 'zod/v4';
 import { useAuthActions } from '../context/auth-provider';
 import { useAuthSubmit } from '../hooks/use-auth-submit';
 import { useAuthStore } from '@/store';
+import { loginSchema, type LoginFormData } from '../schemas';
+import { setValidationErrors } from '../validate-form';
 import './login-form.scss';
-
-const loginSchema = z.object({
-  email: z.email('유효한 이메일을 입력하세요'),
-  password: z.string().min(6, '비밀번호는 6자 이상이어야 합니다'),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
   const { login } = useAuthActions();
@@ -29,10 +23,7 @@ export default function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     const result = loginSchema.safeParse(data);
     if (!result.success) {
-      result.error.issues.forEach((issue) => {
-        const field = issue.path[0] as keyof LoginFormData;
-        setError(field, { message: issue.message });
-      });
+      setValidationErrors(result, setError);
       return;
     }
     await submit(() => login(result.data));

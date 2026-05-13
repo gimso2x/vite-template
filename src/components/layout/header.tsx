@@ -1,11 +1,9 @@
 import { Link } from '@tanstack/react-router';
 import { useAuth } from '@/features/auth/hooks/use-auth';
-import { useAuthActions } from '@/features/auth/context/auth-provider';
 import './header.scss';
 
 function Header() {
-  const { isAuthenticated, user } = useAuth();
-  const { logout } = useAuthActions();
+  const { isAuthenticated, user, logout } = useAuth();
 
   return (
     <header className="header">

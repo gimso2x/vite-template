@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { ApiError } from '@/lib/api';
 
-export function useAuthSubmit() {
+export function useAuthSubmit(successPath = '/dashboard') {
   const navigate = useNavigate();
   const [serverError, setServerError] = useState('');
 
@@ -10,7 +10,7 @@ export function useAuthSubmit() {
     setServerError('');
     try {
       await action();
-      navigate({ to: '/dashboard' });
+      navigate({ to: successPath });
     } catch (e) {
       if (e instanceof ApiError) {
         setServerError(e.message);

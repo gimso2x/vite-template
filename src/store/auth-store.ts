@@ -1,11 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-export type AuthUser = {
-  id: string;
-  email: string;
-  name: string;
-};
+import type { AuthUser } from '@/features/auth/types';
 
 type AuthState = {
   user: AuthUser | null;
