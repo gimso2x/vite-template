@@ -2,7 +2,7 @@
 import { createContext, useContext, type ReactNode, useCallback } from 'react';
 import { useAuthStore } from '@/store';
 import { loginApi, signupApi, logoutApi } from '../api';
-import type { LoginParams, SignupParams } from '../types';
+import type { LoginParams, SignupParams, AuthResponse } from '../types';
 
 type AuthContextValue = {
   login: (params: LoginParams) => Promise<void>;
@@ -21,12 +21,11 @@ export function useAuthActions() {
 export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
   const { setAuth, logout: storeLogout, setLoading } = useAuthStore();
 
-  const login = useCallback(
-    async (params: LoginParams) => {
+  const authenticate = useCallback(
+    async (action: () => Promise<AuthResponse>) => {
       setLoading(true);
       try {
-        const { user, accessToken, refreshToken } = await loginApi(params);
-        setAuth(user, accessToken, refreshToken);
+        setAuth(await action());
       } finally {
         setLoading(false);
       }
@@ -34,18 +33,9 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     [setAuth, setLoading],
   );
 
-  const signup = useCallback(
-    async (params: SignupParams) => {
-      setLoading(true);
-      try {
-        const { user, accessToken, refreshToken } = await signupApi(params);
-        setAuth(user, accessToken, refreshToken);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [setAuth, setLoading],
-  );
+  const login = useCallback((params: LoginParams) => authenticate(() => loginApi(params)), [authenticate]);
+
+  const signup = useCallback((params: SignupParams) => authenticate(() => signupApi(params)), [authenticate]);
 
   const logout = useCallback(async () => {
     try {

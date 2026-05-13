@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { AuthUser } from '@/features/auth/types';
+import type { AuthUser, AuthResponse } from '@/features/auth/types';
 
 type AuthState = {
   user: AuthUser | null;
@@ -10,7 +10,7 @@ type AuthState = {
 };
 
 type AuthActions = {
-  setAuth: (user: AuthUser, accessToken: string, refreshToken: string) => void;
+  setAuth: (response: AuthResponse) => void;
   setTokens: (accessToken: string, refreshToken: string) => void;
   setLoading: (loading: boolean) => void;
   logout: () => void;
@@ -24,7 +24,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       refreshToken: null,
       isLoading: false,
 
-      setAuth: (user, accessToken, refreshToken) => set({ user, accessToken, refreshToken, isLoading: false }),
+      setAuth: (response) => set({ ...response, isLoading: false }),
 
       setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
 
