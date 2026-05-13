@@ -48,6 +48,23 @@ Full-stack React SPA built with TanStack Router, TanStack Query, and Hono BFF, u
 - `pnpm test:run` - Run tests using Vitest
 - `pnpm build` - Typecheck and build for production
 
+## Code Quality — FF 4가지 기준
+
+> 참고: [Frontend Fundamentals — 좋은 코드를 위한 4가지 기준](https://frontend-fundamentals.com/code-quality/code/)
+
+좋은 코드는 **변경하기 쉬운** 코드입니다. 모든 코드 작성·수정 시 다음 4가지 기준을 의식하세요.
+
+1. **가독성**: 한 번에 고려하는 맥락이 적고 위에서 아래로 읽히는가?
+2. **예측 가능성**: 이름과 시그니처만으로 동작을 예측할 수 있는가? (협업하는 동료 관점)
+3. **응집도**: 함께 수정되어야 할 코드가 같은 위치에 있는가?
+4. **결합도**: 수정 시 영향 범위가 국소적인가?
+
+**기준 간 상충**: 4가지를 동시에 충족하기 어렵습니다. 위험성이 높으면 응집도를, 낮으면 가독성·결합도를 우선하세요.
+
+- 과도한 추상화 대신 **중복 코드를 허용**하세요 (결합도 ↓).
+- 단, 함께 수정하지 않으면 오류가 생기는 코드는 **반드시 응집**하세요 (응집도 ↑).
+- 상세 전략과 예시는 `docs/conventions/coding-convention.md`를 참조하세요.
+
 ## Review Checklist for Agents
 
 - [ ] Run `pnpm install` after pulling remote changes and before getting started.
