@@ -2,11 +2,55 @@
 @use 'reset';
 @use 'buttons';
 
-// Ground Design System CSS (includes :root tokens + reset + component styles)
-@import '@proptier/ground/style.css';
-
-// --- Semantic color aliases (Ground tokens → app semantic names) ---
+// --- Local design tokens ---
 :root {
+  // Neutral palette
+  --color-gray-0: #ffffff;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  // Brand and feedback palette
+  --color-primary-400: #a78bfa;
+  --color-primary-500: #8b5cf6;
+  --color-primary-600: #7c3aed;
+  --color-green-500: #22c55e;
+  --color-yellow-500: #eab308;
+  --color-red-50: #fef2f2;
+  --color-red-100: #fee2e2;
+  --color-red-300: #fca5a5;
+  --color-red-500: #ef4444;
+
+  // Scale tokens
+  --line-heights-140: 1.4;
+  --line-heights-160: 1.6;
+  --spacing-4: 0.4rem;
+  --spacing-8: 0.8rem;
+  --spacing-12: 1.2rem;
+  --spacing-16: 1.6rem;
+  --spacing-20: 2rem;
+  --spacing-24: 2.4rem;
+  --spacing-32: 3.2rem;
+  --spacing-40: 4rem;
+  --spacing-48: 4.8rem;
+  --spacing-64: 6.4rem;
+  --radius-4: 0.4rem;
+  --radius-8: 0.8rem;
+  --radius-12: 1.2rem;
+  --radius-16: 1.6rem;
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 8%);
+  --shadow-md: 0 8px 24px rgb(15 23 42 / 12%);
+  --shadow-lg: 0 16px 40px rgb(15 23 42 / 14%);
+  --shadow-xl: 0 24px 56px rgb(15 23 42 / 16%);
+
+  // Semantic aliases
   --color-bg: var(--color-gray-0);
   --color-text: var(--color-gray-700);
   --color-text-heading: var(--color-gray-900);

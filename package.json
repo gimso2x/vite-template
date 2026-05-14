@@ -4,6 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "packageManager": "pnpm@10.30.3",
+  "engines": {
+    "node": ">=22.22.0",
+    "pnpm": ">=10.30.3"
+  },
   "scripts": {
     "preinstall": "npx --yes only-allow pnpm",
     "dev": "vite",
@@ -30,7 +34,6 @@
   "devDependencies": {
     "@babel/core": "^7.29.0",
     "@eslint/js": "^10.0.1",
-    "@proptier/ground": "^0.1.21",
     "@rolldown/plugin-babel": "^0.2.3",
     "@tanstack/devtools-vite": "^0.6.0",
     "@tanstack/react-devtools": "^0.10.2",

@@ -1,7 +1,7 @@
-// Ground ground.css에 reset이 포함되어 있어 최소 앱 리셋만 유지
+// Minimal app reset paired with local design tokens.
 
 html {
-  font-size: 62.5%; // 10px = 1rem (Ground 토큰 기준)
+  font-size: 62.5%; // 10px = 1rem
 }
 
 #root {
